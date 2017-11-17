@@ -1,0 +1,220 @@
+REM MbmShow.opl v1.12 (c) 2007-2008 Silas S. Brown.
+
+REM To compile: Get this into the OPL program editor
+REM (New File, type Program, then find the Import text option)
+REM and use the 'translate' option
+
+REM Before compiling, YOU NEED TO CHANGE place_to_look$ BELOW
+REM (the line that says place_to_look$ = "C:\")
+REM (set it to the directory where you put contents.dat, sequence.dat and font*.mbm)
+
+REM    Licensed under the Apache License, Version 2.0 (the "License");
+REM    you may not use this file except in compliance with the License.
+REM    You may obtain a copy of the License at
+REM
+REM        http://www.apache.org/licenses/LICENSE-2.0
+REM
+REM    Unless required by applicable law or agreed to in writing, software
+REM    distributed under the License is distributed on an "AS IS" BASIS,
+REM    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+REM    See the License for the specific language governing permissions and
+REM    limitations under the License.
+
+PROC main:
+global seq%,prefix$(255)
+local place_to_look$(255)
+local r%,cFile%,startP&,stopP&
+
+place_to_look$ = "C:\"
+
+REM First try to open a contents file
+r% = IOOPEN(cFile%,place_to_look$+"contents.dat",$0400+$0200)
+IF r% >= 0
+  REM we got a contents file
+  REM prompt for a document number
+  IOSEEK(cFile%,2,startP&) : REM startP& now points to EOF
+  r% = startP& / 4 : REM number of long offsets in contents.dat
+  IF r% > 1 : REM we have a choice
+    startP& = 1
+    dInit "Choose document number"
+    dLong startP&,"Number",1,r%
+    IF dialog<=0
+      REM Escape pressed - assume we don't want to use this contents/sequence and go to general MBM viewing
+      startP& = -1
+    ENDIF
+  ELSE : REM no choice (contents.dat probably written by a script to point us somewhere in sequence.dat)
+    startP& = 1
+  ENDIF
+  IF startP&<>-1
+    REM Document number selected in startP&
+    REM Get start and end of document into startP& and stopP&
+    startP& = (startP&-1)*4
+    IOSEEK(cFile%,1,startP&)
+    IOREAD(cFile%,ADDR(startP&),4)
+    IOREAD(cFile%,ADDR(stopP&),4) : REM doesn't matter if that's EOF (stopP&==0 ok then)
+  ENDIF
+  IOCLOSE(cFile%) : REM (in case the above-mentioned script wants to write a new contents.dat while we're still running)
+ELSE : PRINT "contents.dat not found"
+ENDIF
+
+REM see if we can open a sequence file
+REM (there had better be one if startP& is not 0)
+IF startP& <> -1
+  IOOPEN(seq%,place_to_look$+"sequence.dat",$0400+$0200)
+ENDIF
+REM (if startP&==-1 then the user pressed Escape from the document selector, so we ignore any sequence file and fall back to general MBM viewing)
+IF seq%
+  REM we have a sequence file
+  prefix$ = place_to_look$+"font" : REM .mbm  
+ELSE
+  REM no sequence.dat - default to displaying any MBM
+  REM (so can be used like QuickView, except will display more than one image per slide if can fit)
+  dInit "Choose an MBM to view"
+  dFile prefix$,"filename",0
+  dialog
+  IF LOWER$(RIGHT$(prefix$,4))=".mbm": prefix$=LEFT$(prefix$,LEN(prefix$)-4):ENDIF
+  startP&=0
+ENDIF
+
+show:(startP&,stopP&)
+
+ENDP
+
+PROC show:(startP&, stopP&)
+REM Show as slides from position startP& to position stopP& (not including stopP&)
+REM stopP&=0 for show to EOF
+
+REM Expects the following globals:
+REM seq% is the sequence file (or 0)
+REM prefix$ is the base filename of the MBMs
+
+global minLines% : REM (minimum lines-per-screen seen so far - used for leading)
+global gWin%(3),sMax%,pos&(10),pStop&
+local slideNo%,dir%,r%,oldDir%
+
+pStop& = stopP&
+pos&(1) = startP&
+
+REM gcreate loop
+REM (re-using dir% as a temporary before main loop starts)
+dir%=1 : WHILE dir%<=3
+  gWin%(dir%)=gcreate(0, 0, gWidth, gHeight, 1, 1)
+  dir%=dir%+1
+ENDWH
+r%=load%:(0) : REM get the first side in
+slideNo% = 0 : dir% = 1
+WHILE 1
+gOrder gWin%(offset%:(slideNo%,3)), 1
+gUse gWin%(offset%:(slideNo%,3)) : gVisible on
+IF slideNo%+dir%>=0 : r%=load%:(slideNo%+dir%) : ENDIF
+oldDir%=dir%
+if GET=27 : dir% = -1 : ELSE : dir%=1 : ENDIF
+IF slideNo%+dir%>=0 : slideNo% = slideNo% + dir% : ENDIF
+IF r%=0 AND dir%=oldDir% : giprint "Ctrl-Esc to exit" : ENDIF : REM because we're about to gVisible a blank slide
+ENDWH
+ENDP
+
+PROC offset%:(a%,max%)
+  RETURN a%-INT(a%/max%)*max% + 1
+ENDP
+
+PROC load%:(slideNo%)
+REM Loads slide slideNo% into an off-screen window
+REM Returns 1 if put something in the window, 0 if blank
+REM Expects globals from PROC show, including:
+REM sMax% is the highest slide no. so far (including slideNo%; will be incremented if ==slideNo%)
+REM gWin% is the array of windows (offset will be slideNo% MOD 3)
+REM pos& is the array of last 10 slides' position starts (if slideNo%==0, pos&(1) should be set to start pos; after that, this function maintains pos& and sMax%)
+REM pStop& is the position to stop at (or 0 for stop at EOF)
+
+LOCAL id%, h%, w%, c%, t%
+LOCAL maxH% : REM the max height of images on this line
+LOCAL gW%, p&
+LOCAL r% : REM return value
+
+gW% = gWin%(offset%:(slideNo%,3))
+guse gW%
+gvisible off
+gCls
+
+IF slideNo%<sMax%-10
+  gAt 0,100 : gPrint "Cache empty - go forward again"
+  RETURN r% : REM too far back  (TODO may still be able to go back 1 bitmap at a time, or make up a slide backwards (running the code twice if necessary) or something)
+ENDIF
+p& = pos&(offset%:(slideNo%,10))
+
+IF seq%
+  IF IOSEEK(seq%,1,p&) < 0 : GOTO finish : ENDIF
+ELSE : c% = p& - 1 : REM -1 because the first thing we do is add 1 to it
+ENDIF
+
+WHILE pStop&=0 OR p&<pStop&
+
+IF seq%
+  IF IOREAD(seq%,ADDR(c%),2) < 0 : BREAK : ENDIF : REM EOF
+  p& = p& + 2
+ELSE : c% = UADD(c%,1) : p&=p&+1 : ENDIF
+
+REM print character number c%
+IF c%<0 : id%=(65536+c%)/510
+ELSE : id%=c%/510 : ENDIF : REM (510 bitmaps in each mbm, unsigned division)
+ONERR finish
+IF id% > 0 : id%=gLOADBIT(prefix$+HEX$(id%)+".mbm",0,USUB(c%,id%*510))
+ELSE : id%=gLOADBIT(prefix$+".mbm",0,c%)
+ENDIF
+ONERR OFF
+r% = 1
+gUse id%
+h% = gHeight : w% = gWidth
+gUse gW%
+
+IF gWidth - gX < w%
+  REM need to go onto next line
+
+  REM maxH% = gHeight / int(gHeight/maxH%) : REM Round maxH% up to an integer divisor of the screen height (helps with leading, assuming all images are similar height)
+  REM (if causes division by zero then one of the images was too wide)
+  REM slightly better version that also divides the expected gap at the bottom of the screen between the other leadings:
+  t% = gHeight/maxH% : REM number of lines of this height that will fit
+  IF NOT minLines% OR t%<minLines% : minLines%=t% : ENDIF
+  IF minLines%>1
+    t% = gHeight / minLines% : REM height of such lines
+    maxH% = t% + (t%-maxH%)/(minLines% - 1)
+  ENDIF
+
+  gMove -gX,maxH% : maxH%=0
+ENDIF
+IF gHeight - gY < h%
+  REM Won't fit
+  gClose id%
+  IF seq%
+    REM go back 2 bytes for next slide
+    REM and set p& to the correct position
+    p& = -2
+    IOSEEK(seq%,3,p&)
+  ELSE : p&=p&-1
+  ENDIF
+  BREAK
+ENDIF
+IF h% > maxH% : maxH% = h% : ENDIF
+IF gX=0 AND gWidth>=640 AND w%<gWidth-5 : gMove 5,0 : ENDIF : REM Margin on S7+ if appropriate (not needed on Revo)
+gCopy id%,0,0,w%,h%,3
+gClose id%
+gMove w%,0
+
+REM and add a space afterwards:
+h% = h% / 4 : REM to get a rough idea of how much space to leave
+IF gWidth - gX < h% : gMove gWidth-gX,0 : REM make it clear to the code above that we can't fit any more images on this line
+ELSE gMove h%,0 : ENDIF
+
+ENDWH
+
+finish::
+ONERR OFF
+IF r%=0
+  gAt 0,100 : gPrint "No more slides"
+ENDIF
+REM update pos& with start position of next slide (and sMax%)
+pos&(offset%:(slideNo%+1,10)) = p&
+IF slideNo% = sMax% : sMax% = sMax% + 1 : ENDIF
+RETURN r%
+ENDP
