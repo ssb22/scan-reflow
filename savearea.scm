@@ -6,8 +6,14 @@
 
 ;; 1.  If you haven't already run the Gimp, run it.
 
+;; - If you are running Gimp on a shared system on which
+;; you have limited quota, you might like to set it up
+;; in /tmp using a command like:
+;; mkdir -p /tmp/$USER ; XAUTHORITY=$HOME/.Xauthority HOME=/tmp/$USER gimp
+;; then in the step below, note your .gimp directory will be in /tmp/$USER
+
 ;; 2.  Find your .gimp directory.  On Unix this will be in
-;; your home directory, called .gimp or .gimp-1.2 or
+;; your home directory, called .gimp or .gimp-1.2 or .gimp-2.8 or
 ;; similar (if there's more than one then pick the one that
 ;; corresponds to the version of The GIMP that you're
 ;; using).  On Windows it'll probably be in
@@ -22,27 +28,33 @@
 
 ;; 4.  Open a new image, right-click on it, go to "File",
 ;; and there should be an option called "Save area".  It's
-;; a good idea to assign a shortcut key to it (personally I
-;; use the slash key, /).  In some versions of The GIMP,
-;; all you have to do is point at this option and then
-;; press the shortcut key that you want to assign to it
-;; (and it will then appear next to the menu item).  In
-;; other versions of The GIMP, you will have to go to the
-;; main window (not the image window) and navigate through
+;; a good idea to assign a shortcut key to it.  Personally I
+;; use the slash key (/).
+;;
+;; - In Gimp 2.8, from an image window go to Edit / Preferences,
+;; Interface / Configure keyboard shortcuts, search for
+;; Save Area, and press the key (/) then Close / OK.
+;;
+;; - In older Gimp 1.x you may need to find the main window
+;; (not the image window), and navigate through
 ;; File / Preferences / Interface / Configure keyboard
 ;; shortcuts / Plug-ins, find "Save area" somewhere in the
 ;; long list that appears, and then type the shortcut key.
-;; (In Gimp 2.8, it's Edit / Preferences from an image and
-;; then as above.)
+;;
+;; - In some even older Gimp versions, all you have to
+;; do is point at this option on the menu itself and then
+;; press the shortcut key that you want to assign to it
+;; (and it will then appear next to the menu item).
 
 ;; 5. While configuring The GIMP, I also recommend choosing
 ;; the Selection tool (the box) if it's not already chosen,
-;; and going to File/Preferences/Input Devices and press
-;; "Save Input Device Settings Now".  This will cause The
-;; GIMP to load with the selection tool by default, which is
-;; useful if you do more work with selections than with
-;; actual drawing.  (Older versions of The GIMP had the
-;; selection tool as the default anyway.)
+;; and going to Preferences (via Edit or File as above),
+;; Input Devices, "Save Input Device Settings Now".
+;; This will cause The GIMP to load with the selection
+;; tool by default, which is useful if you do more work
+;; with selections than with actual drawing.
+;; (Older versions of The GIMP had the selection tool as
+;; the default anyway.)
 
 ;; 6.  You should now be able to make a selection and then
 ;; use that shortcut key to save it quickly, then make
