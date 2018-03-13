@@ -9,8 +9,13 @@
 ;; - If you are running Gimp on a shared system on which
 ;; you have limited quota, you might like to set it up
 ;; in /tmp using a command like:
+;;
 ;; mkdir -p /tmp/$USER ; XAUTHORITY=$HOME/.Xauthority HOME=/tmp/$USER gimp
 ;; then in the step below, note your .gimp directory will be in /tmp/$USER
+;;
+;; (or you could set swap-path and temp-path in .gimprc, but you may
+;; then need to alter areas2pdf.sh, unless you symlink from .gimp*/tmp,
+;; and you may still need to create a private tmp subdirectory each time)
 
 ;; 2.  Find your .gimp directory.  On Unix this will be in
 ;; your home directory, called .gimp or .gimp-1.2 or .gimp-2.8 or
