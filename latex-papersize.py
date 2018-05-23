@@ -30,7 +30,7 @@ low-vision users because fonts like CMR have different
 versions at different sizes and the small-sized versions
 are often meant to be clearer.
 
-This is a Python script to calculate the necessary
+This is a Python 2 script to calculate the necessary
 settings for arbitrary font and page sizes.
 
 BASIC USAGE
