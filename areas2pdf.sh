@@ -2,8 +2,14 @@
 
 # Gather saved areas from GIMP temp directory, put them in
 # order, and convert to PDF using pdflatex
-# (c) Silas S. Brown 2005,2007,2010,2012,2018 (version 1.04).
+# (c) Silas S. Brown 2005,2007,2010,2012,2018 (version 1.05).
 # License: GPL
+
+if ! which pngtopnm 2>/dev/null >/dev/null; then
+    echo "pngtopnm command not found"
+    echo "Maybe you need to install netpbm or netpbm-progs on this system"
+    exit 1
+fi
 
 export TmpDir=$(mktemp -d /tmp/areas2pdfXXXXXX)
 cd $TmpDir || exit 1
