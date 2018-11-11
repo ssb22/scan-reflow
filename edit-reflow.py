@@ -1,9 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 # Edit enlarged documents made by reflow.c
 # (c) Silas S. Brown, 2006-2009, 2012.  Version 1.20
 # 
-# Run with:  python edit-reflow.py
 # Shows documentation on startup (or you can read it below)
 
 #    This program is free software; you can redistribute it and/or modify

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 # bitmap.py v1.0 (c) 2009 Silas S. Brown.
 

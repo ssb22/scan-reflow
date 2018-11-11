@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 print "tex2mbm-fast v1.2 (c) 2008,2009 Silas S. Brown.  License: Apache 2" # see below
 

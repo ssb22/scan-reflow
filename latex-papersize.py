@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 r"""
 Calculate LaTeX paper and margin settings for arbitrary magnification
 (C) Silas S. Brown, 2005-2009, 2016.  Version 1.62.
