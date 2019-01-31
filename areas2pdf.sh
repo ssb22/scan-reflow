@@ -2,7 +2,7 @@
 
 # Gather saved areas from GIMP temp directory, put them in
 # order, and convert to PDF using pdflatex
-# (c) Silas S. Brown 2005,2007,2010,2012,2018 (version 1.05).
+# (c) Silas S. Brown 2005,2007,2010,2012,2018-2019 (version 1.06).
 # License: GPL
 
 if ! which pngtopnm 2>/dev/null >/dev/null; then
@@ -16,8 +16,8 @@ cd $TmpDir || exit 1
 export Count=1
 echo '\documentclass{article}\usepackage[pdftex]{graphicx}\usepackage{geometry}\geometry{verbose,a4paper,tmargin=10mm,bmargin=10mm,lmargin=10mm,rmargin=10mm,headheight=0mm,headsep=0mm,footskip=0mm}\pagestyle{empty}\begin{document}\raggedright\noindent' > handout.tex
 export IFS=$'\n' # (NB $HOME may have spaces in it on cygwin)
-for N in $(ls -r -t "$HOME"/.gimp*/tmp/*-area.png "$HOME/Library/Application Support/Gimp/tmp"/*.png 2>/dev/null); do
-  if ! test -e "$N"; then continue; fi
+for N in $(ls -r -t "$HOME"/.config/GIMP/*/tmp/*-area.png "$HOME"/.gimp*/tmp/*-area.png "$HOME/Library/Application Support/Gimp/tmp"/*-area.png 2>/dev/null); do
+  if ! test -e "$N"; then continue; fi # wrong directory
   mv "$N" $Count.png || (cp "$N" $Count.png && rm "$N")
   export Geom=$(pngtopnm $Count.png | head -2 | tail -1)
   if test $(echo $Geom | sed -e 's/ / -gt /'); then

@@ -1,4 +1,4 @@
-;; GIMP "save area" function, (c) Silas S. Brown 2005, 2007.  Version 1.1
+;; GIMP "save area" function, (c) Silas S. Brown 2005, 2007, 2019.  Version 1.2
 ;; License: GPL
 
 ;; INSTALLATION INSTRUCTIONS
@@ -11,27 +11,36 @@
 ;; in /tmp using a command like:
 ;;
 ;; mkdir -p /tmp/$USER ; XAUTHORITY=$HOME/.Xauthority HOME=/tmp/$USER gimp
-;; then in the step below, note your .gimp directory will be in /tmp/$USER
+;; then in the step below, note your .gimp or .config/GIM directory
+;; will be in /tmp/$USER
 ;;
 ;; (or you could set swap-path and temp-path in .gimprc, but you may
 ;; then need to alter areas2pdf.sh, unless you symlink from .gimp*/tmp,
 ;; and you may still need to create a private tmp subdirectory each time)
 
 ;; 2.  Find your .gimp directory.  On Unix this will be in
-;; your home directory, called .gimp or .gimp-1.2 or .gimp-2.8 or
-;; similar (if there's more than one then pick the one that
+;; your home directory, called .config/GIMP/2.10 or similar
+;; (for 2.10+), or .gimp or .gimp-1.2 or .gimp-2.8 or
+;; similar.  If there's more than one then pick the one that
 ;; corresponds to the version of The GIMP that you're
-;; using).  On Windows it'll probably be in
+;; using.  On Windows it'll probably be in
 ;; C:\Documents and Settings\your user ID\.gimp-2.2 or
 ;; similar (in other words it will be in the CygWin home
 ;; directory) or you can find it by searching all files and
 ;; folders for .gimp.
 ;; On a Mac, try Library/Application Support/Gimp
 
-;; 3.  Save this file (savearea.scm) into the "scripts"
-;; subdirectory of the .gimp directory, and restart Gimp.
+;; 3. If your GIMP is 2.10+, replace the word NORMAL with 0
+;; in this file (Gimp 2.10+ no longer defines NORMAL).
+;; If your GIMP is 2.8 or below, BEWARE that if it's ever
+;; upgraded to 2.10+ you will have to make this replacement
+;; and must do so under .config/GIMP not the old .gimp-2.8
+;; (which is NOT automatically deleted by the upgrade).
 
-;; 4.  Open a new image, right-click on it, go to "File",
+;; 4.  Save this file (savearea.scm) into the "scripts"
+;; subdirectory of the gimp directory, and restart Gimp.
+
+;; 5.  Open a new image, right-click on it, go to "File",
 ;; and there should be an option called "Save area".  It's
 ;; a good idea to assign a shortcut key to it.  Personally I
 ;; use the slash key (/).
@@ -51,7 +60,7 @@
 ;; press the shortcut key that you want to assign to it
 ;; (and it will then appear next to the menu item).
 
-;; 5. While configuring The GIMP, I also recommend choosing
+;; 6. While configuring The GIMP, I also recommend choosing
 ;; the Selection tool (the box) if it's not already chosen,
 ;; and going to Preferences (via Edit or File as above),
 ;; Input Devices, "Save Input Device Settings Now".
@@ -61,7 +70,7 @@
 ;; (Older versions of The GIMP had the selection tool as
 ;; the default anyway.)
 
-;; 6.  You should now be able to make a selection and then
+;; 7.  You should now be able to make a selection and then
 ;; use that shortcut key to save it quickly, then make
 ;; another selection and so on.  If this doesn't work in
 ;; your version of The GIMP then try converting the input
