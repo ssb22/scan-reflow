@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Script to assist in correcting rotations
-# (c) Silas S. Brown 2006-2008, v1.1212.  License: GPL
+# (c) Silas S. Brown 2006-2008,2019, v1.1213.  License: GPL
 
-if test "a$1" == "a"; then
+if [ ! "$1" ]; then
   echo "Syntax: $0 image-file image-file ....."
   echo "Helps you de-rotate all images listed on the command-line."
   exit 1
@@ -42,7 +42,7 @@ read
 unset NeedRemove
 export TempDirectory=$(mktemp -d)
 touch $TempDirectory/.ready
-while ! test "a$1" == a; do
+while [ "$1" ]; do
 if test -d /cygdrive; then
 # looks like we're on CygWin - this is tricky
 cp "$1" /cygdrive/c/Program*Files/GIMP*/bin
@@ -70,7 +70,7 @@ export Geom=$(pngtopnm $File | head -2 | tail -1)
 if test $(echo $Geom|sed -e 's/ .*//') -gt 300; then break; else unset Geom; fi
 done
 popd
-if test "a$Geom" == a; then
+if [ ! "$Geom" ]; then
   echo ; echo "ERROR: You did not select a large enough area for reliable rotation (must be at least 300 pixels wide)."
   echo "(This error can also be caused by a timing bug in some versions of the GIMP - try doing it again more slowly.)"
   echo "Press Enter to try again."
@@ -93,10 +93,10 @@ fi
 (cd "$HOME";rm .gimp*/tmp/*-area.png)
 done
 while ! test -e $TempDirectory/.ready; do echo "Waiting for netpbm to catch up"; sleep 1; done
-if ! test "a$NeedRemove" == a; then clear; fi
+if [ "$NeedRemove" ]; then clear; fi
 echo "All images have been de-rotated."
 rm -rf $TempDirectory
-if test "a$NeedRemove" == a; then exit; fi
+if [ ! "$NeedRemove" ]; then exit; fi
 echo "One more thing: You may need to manually remove any large
 marks at the edges of the scan; these are quite likely if
 the document was rotated when the area to scan was selected,

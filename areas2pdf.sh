@@ -2,7 +2,7 @@
 
 # Gather saved areas from GIMP temp directory, put them in
 # order, and convert to PDF using pdflatex
-# (c) Silas S. Brown 2005,2007,2010,2012,2018-2019 (version 1.06).
+# (c) Silas S. Brown 2005,2007,2010,2012,2018-2019 (version 1.07).
 # License: GPL
 
 if ! which pngtopnm 2>/dev/null >/dev/null; then
@@ -38,7 +38,7 @@ for N in $(ls -r -t "$HOME"/.config/GIMP/*/tmp/*-area.png "$HOME"/.gimp*/tmp/*-a
 done
 echo '\end{document}' >> handout.tex
 pdflatex handout.tex
-if ! test "a$areas2pdf_force_problem" == a || ! test -e handout.pdf; then
+if [ "$areas2pdf_force_problem" ] || [ ! -e handout.pdf ]; then
   echo "There was a problem producing handout.pdf"
   echo "You will need to pick up the pieces from $TmpDir"
   exit 1
