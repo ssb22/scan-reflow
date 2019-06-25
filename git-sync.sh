@@ -1,4 +1,5 @@
 #!/bin/bash
+git pull --no-edit
 wget -N http://people.ds.cam.ac.uk/ssb22/notes/areas2pdf.sh
 wget -N http://people.ds.cam.ac.uk/ssb22/notes/bitmap.py
 wget -N http://people.ds.cam.ac.uk/ssb22/notes/derotate.sh
