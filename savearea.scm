@@ -11,7 +11,7 @@
 ;; in /tmp using a command like:
 ;;
 ;; mkdir -p /tmp/$USER ; XAUTHORITY=$HOME/.Xauthority HOME=/tmp/$USER gimp
-;; then in the step below, note your .gimp or .config/GIM directory
+;; then in the step below, note your .gimp or .config/GIMP directory
 ;; will be in /tmp/$USER
 ;;
 ;; (or you could set swap-path and temp-path in .gimprc, but you may
