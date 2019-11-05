@@ -2,7 +2,7 @@
 
 # Gather saved areas from GIMP temp directory, put them in
 # order, and convert to PDF using pdflatex
-# (c) Silas S. Brown 2005,2007,2010,2012,2018-2019 (version 1.07).
+# (c) Silas S. Brown 2005,2007,2010,2012,2018-2019 (version 1.08).
 # License: GPL
 
 if ! which pngtopnm 2>/dev/null >/dev/null; then
@@ -11,12 +11,18 @@ if ! which pngtopnm 2>/dev/null >/dev/null; then
     exit 1
 fi
 
+if ! which pdflatex 2>/dev/null >/dev/null; then
+    echo "pdflatex command not found"
+    echo "Maybe you need to install texlive or similar on this system"
+    exit 1
+fi
+
 export TmpDir=$(mktemp -d /tmp/areas2pdfXXXXXX)
 cd $TmpDir || exit 1
 export Count=1
 echo '\documentclass{article}\usepackage[pdftex]{graphicx}\usepackage{geometry}\geometry{verbose,a4paper,tmargin=10mm,bmargin=10mm,lmargin=10mm,rmargin=10mm,headheight=0mm,headsep=0mm,footskip=0mm}\pagestyle{empty}\begin{document}\raggedright\noindent' > handout.tex
 export IFS=$'\n' # (NB $HOME may have spaces in it on cygwin)
-for N in $(ls -r -t "$HOME"/.config/GIMP/*/tmp/*-area.png "$HOME"/.gimp*/tmp/*-area.png "$HOME/Library/Application Support/Gimp/tmp"/*-area.png 2>/dev/null); do
+for N in $(ls -r -t "$HOME"/.config/GIMP/*/tmp/*-area.png "$HOME"/.gimp*/tmp/*-area.png /tmp/gimp/*/*-area.png "$HOME/Library/Application Support/Gimp/tmp"/*-area.png 2>/dev/null); do
   if ! test -e "$N"; then continue; fi # wrong directory
   mv "$N" $Count.png || (cp "$N" $Count.png && rm "$N")
   export Geom=$(pngtopnm $Count.png | head -2 | tail -1)
@@ -36,6 +42,12 @@ for N in $(ls -r -t "$HOME"/.config/GIMP/*/tmp/*-area.png "$HOME"/.gimp*/tmp/*-a
   echo "\\resizebox*$ResizeParams{$RotStart\\includegraphics{$Count.png}$RotEnd}" >> handout.tex
   export Count=$[$Count+1]
 done
+if [ $Count == 1 ] ; then
+    echo "Couldn't find any area files."
+    echo "(Did you set GIMP3_TEMPDIR to somewhere areas2pdf doesn't know about?)"
+  rm handout.tex ; cd .. ; rmdir "$TmpDir"
+  exit 1
+fi
 echo '\end{document}' >> handout.tex
 pdflatex handout.tex
 if [ "$areas2pdf_force_problem" ] || [ ! -e handout.pdf ]; then
