@@ -9,7 +9,7 @@ Simply adding instructions such as `\Large` is not enough, as it doesn’t enlar
 
 It’s more effective to change the LaTeX paper size and margin settings to simulate small paper, then magnify this up to the real paper size.  The exact settings can be adjusted to achieve virtually any desired font size, and everything is enlarged to that size.
 
-You can generate the settings using my Python 2 script `latex-papersize.py` (also in TeX Live and CTAN; previously called LatexPaper.py).  See the `--help` text or the comments at the beginning of the script for how to use it.
+You can generate the settings using my Python script `latex-papersize.py` (now works in both Python 2 and Python 3; older Python 2 only version is also in TeX Live and CTAN; previously called LatexPaper.py).  See the `--help` text or the comments at the beginning of the script for how to use it.
 
 Enlarging material using The GIMP
 ---------------------------------
