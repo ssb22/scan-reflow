@@ -1,7 +1,9 @@
 #!/usr/bin/env python
+# (works in both Python 2 and Python 3)
+
 r"""
 Calculate LaTeX paper and margin settings for arbitrary magnification
-(C) Silas S. Brown, 2005-2009, 2016, 2019.  Version 1.63.
+(C) Silas S. Brown, 2005-2009, 2016, 2019-20.  Version 1.64.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -158,7 +160,7 @@ except: from subprocess import getoutput # Python 3
 def hasKey(a,b):
   try: return a.has_key(b) # old Python 2
   except: return b in a # newer Python 2 + Python 3
-if len(sys.argv)==2 and sys.argv[1]=="--help":
+if (len(sys.argv)==2 and sys.argv[1]=="--help") or len(sys.argv)==1:
   print(__doc__.strip()); raise SystemExit
 if len(sys.argv)==2 and sys.argv[1]=="--version":
   print(__doc__[:__doc__.find("\n\n")].strip()); raise SystemExit
