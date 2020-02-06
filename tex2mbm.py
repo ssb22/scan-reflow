@@ -7,7 +7,7 @@ import sys
 # you can add to them here by doing something like
 # import os ; sys.argv += filter(lambda x:x.startswith("myfile-"), os.listdir("."))
 if len(sys.argv)<2:
-    print "Syntax: python tex2mbm.py input-files"
+    print "Syntax: python2 tex2mbm.py input-files"
     print "Input files can be .tex or .ps or .pdf"
     print "CHANGE THE VARIABLES AT THE START OF THE SCRIPT FIRST."
     print "Creates contents.dat, sequence.dat and *.mbm"

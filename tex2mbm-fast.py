@@ -8,7 +8,7 @@ import sys
 # you can add to them here by doing something like
 # import os ; sys.argv += filter(lambda x:x.startswith("myfile-"), sorted(os.listdir(".")))
 if len(sys.argv)<2:
-    print "Syntax: python tex2mbm-fast.py .tex-files"
+    print "Syntax: python2 tex2mbm-fast.py .tex-files"
     print "Creates contents.dat, sequence.dat and *.mbm"
     print "which should be loaded onto the EPOC device with MbmShow"
     sys.exit()

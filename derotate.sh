@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script to assist in correcting rotations
-# (c) Silas S. Brown 2006-2008,2019, v1.1213.  License: GPL
+# (c) Silas S. Brown 2006-2008,2019-2020, v1.1214.  License: GPL
 
 if [ ! "$1" ]; then
   echo "Syntax: $0 image-file image-file ....."
@@ -80,7 +80,7 @@ elif test $NumFiles -gt 2; then
   echo "Press Enter to try again."
   read
 else
-  export Deg=$(echo $Geom | python -c 'import sys,math; w,h=sys.stdin.read().split() ; print math.atan(1.0*int(h)/int(w))*180/math.pi')
+  export Deg=$(echo $Geom | python -c 'import sys,math; w,h=sys.stdin.read().split() ; print(math.atan(1.0*int(h)/int(w))*180/math.pi)') # Python 2 and Python 3 should both work
   if test $NumFiles == 2; then export Deg=-$Deg; fi
   while ! test -e $TempDirectory/.ready; do echo "Waiting for netpbm to catch up"; sleep 1; done; rm $TempDirectory/.ready # as above
   # some buggy versions of pnmrotate don't like -background=white on a PPM (2-colour) image, so we need to make sure it's at least greyscale first, ideally in the same pipe.  pnmtopng/pngtopnm doesn't always do it.  Piping through ppmtopcx/pcxtoppm or pnmtorle/rletopnm seems to work.
