@@ -154,6 +154,11 @@ To run dvips on the .dvi file (not needed for pdflatex):
 $(python latex-papersize.py 12 26 file.dvi)
 """
 
+# Where to find history:
+# on GitHub at https://github.com/ssb22/scan-reflow
+# and on GitLab at https://gitlab.com/ssb22/scan-reflow
+# and on BitBucket https://bitbucket.org/ssb22/scan-reflow
+
 import os, sys, math
 try: from commands import getoutput # Python 2
 except: from subprocess import getoutput # Python 3

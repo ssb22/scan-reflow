@@ -83,6 +83,11 @@ just_print_Bmconv_commands = False # if non-False,
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Where to find history:
+# on GitHub at https://github.com/ssb22/scan-reflow
+# and on GitLab at https://gitlab.com/ssb22/scan-reflow
+# and on BitBucket https://bitbucket.org/ssb22/scan-reflow
+
 import os, sys, zlib
 
 baseFilename = "font"

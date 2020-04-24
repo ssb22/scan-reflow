@@ -19,6 +19,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Where to find history:
+# on GitHub at https://github.com/ssb22/scan-reflow
+# and on GitLab at https://gitlab.com/ssb22/scan-reflow
+# and on BitBucket https://bitbucket.org/ssb22/scan-reflow
+
 def lsbMsb(dat):
   tot=0 ; mul=0
   for d in dat:

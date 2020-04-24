@@ -70,6 +70,11 @@ leave_tex_logs = False # set if you don't want them deleted
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Where to find history:
+# on GitHub at https://github.com/ssb22/scan-reflow
+# and on GitLab at https://gitlab.com/ssb22/scan-reflow
+# and on BitBucket https://bitbucket.org/ssb22/scan-reflow
+
 import os, re
 baseFilename = "font"
 dpi_to_set_at = 100 # regardless of actual device DPI - be nice to metafont

@@ -79,6 +79,11 @@
 
 ;; END OF INSTALLATION INSTRUCTIONS
 
+;; Where to find history:
+;; on GitHub at https://github.com/ssb22/scan-reflow
+;; and on GitLab at https://gitlab.com/ssb22/scan-reflow
+;; and on BitBucket https://bitbucket.org/ssb22/scan-reflow
+
 ;; ------------------------------------------------------
 
 

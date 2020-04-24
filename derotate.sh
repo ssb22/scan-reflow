@@ -3,6 +3,11 @@
 # Script to assist in correcting rotations
 # (c) Silas S. Brown 2006-2008,2019-2020, v1.1214.  License: GPL
 
+# Where to find history:
+# on GitHub at https://github.com/ssb22/scan-reflow
+# and on GitLab at https://gitlab.com/ssb22/scan-reflow
+# and on BitBucket https://bitbucket.org/ssb22/scan-reflow
+
 if [ ! "$1" ]; then
   echo "Syntax: $0 image-file image-file ....."
   echo "Helps you de-rotate all images listed on the command-line."

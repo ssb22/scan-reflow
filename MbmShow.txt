@@ -20,6 +20,12 @@ REM    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 REM    See the License for the specific language governing permissions and
 REM    limitations under the License.
 
+REM Where to find history:
+REM on GitHub at https://github.com/ssb22/scan-reflow
+REM and on GitLab at https://gitlab.com/ssb22/scan-reflow
+REM and on BitBucket https://bitbucket.org/ssb22/scan-reflow
+
+
 PROC main:
 global seq%,prefix$(255)
 local place_to_look$(255)

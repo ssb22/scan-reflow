@@ -5,6 +5,11 @@
 # (c) Silas S. Brown 2005,2007,2010,2012,2018-2019 (version 1.08).
 # License: GPL
 
+# Where to find history:
+# on GitHub at https://github.com/ssb22/scan-reflow
+# and on GitLab at https://gitlab.com/ssb22/scan-reflow
+# and on BitBucket https://bitbucket.org/ssb22/scan-reflow
+
 if ! which pngtopnm 2>/dev/null >/dev/null; then
     echo "pngtopnm command not found"
     echo "Maybe you need to install netpbm or netpbm-progs on this system"
