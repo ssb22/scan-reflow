@@ -87,6 +87,7 @@ just_print_Bmconv_commands = False # if non-False,
 # on GitHub at https://github.com/ssb22/scan-reflow
 # and on GitLab at https://gitlab.com/ssb22/scan-reflow
 # and on BitBucket https://bitbucket.org/ssb22/scan-reflow
+# and at https://gitlab.developers.cam.ac.uk/ssb22/scan-reflow
 
 import os, sys, zlib
 

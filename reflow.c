@@ -31,6 +31,7 @@ Known bugs: Should do more checks for I/O errors etc.
 # on GitHub at https://github.com/ssb22/scan-reflow
 # and on GitLab at https://gitlab.com/ssb22/scan-reflow
 # and on BitBucket https://bitbucket.org/ssb22/scan-reflow
+# and at https://gitlab.developers.cam.ac.uk/ssb22/scan-reflow
 
 */
 
