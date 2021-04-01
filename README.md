@@ -53,9 +53,11 @@ If you have low vision then you may find it difficult and time-consuming to get 
 Copyright and Trademarks
 ------------------------
 
-© Silas S. Brown, licensed under the GPL.
+© Silas S. Brown, licensed under Apache 2.
 
 * Acrobat is an Adobe trademark.
+
+* Apache is a registered trademark of The Apache Software Foundation.
 
 * PostScript is a registered trademark of Adobe Systems Inc.
 
