@@ -1,0 +1,8 @@
+This package consists of a python script to calculate LaTeX settings for 
+arbitrary font and page sizes, helpful when producing documents for 
+people with low vision.  Compatible with any other LaTeX package and 
+avoids the usual drawbacks of giant print (less weight in the font etc) 
+by taking the approach of typesetting on small paper and then using 
+magstep.  Can also help for typesetting posters.
+
+License: Apache2
