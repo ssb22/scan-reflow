@@ -1,7 +1,7 @@
 /*
 
 Split scanned images into words, scale and re-flow them
-(c) Silas S. Brown, 2005-2009, 2012, 2021.  Version 1.391
+(c) Silas S. Brown, 2005-2009, 2012, 2021-22.  Version 1.4
 
 Compile by typing:  gcc reflow.c -o reflow
 Then run by typing: ./reflow
@@ -121,7 +121,7 @@ Pbm* pngtoPbm(const char* png_filename) {
   setenv("File",png_filename,1);
   // (NB: use = not == in 'test', for maximum compatibility across sh versions)
   p=popen("export TmpFile=$(mktemp /tmp/tmppnmXXXXXX)\n"
-"pngtopnm $File > $TmpFile; export Type=$(head -1 < $TmpFile)\n"
+"pngtopnm $File > $TmpFile; Type=$(head -1 < $TmpFile)\n"
 "if test $Type = P6; then\n"
 "  ppmtopgm $TmpFile | pgmtopbm -threshold\n"
 "elif test $Type = P5; then\n"
@@ -734,7 +734,7 @@ main(int argc,const char* argv[]) {
     if(scale<0) em_size=AvailableHeight/-scale/(interlinearMode?2:1);
     else em_size = 12*scale;
     fprintf(htmlFile,"<HTML><HEAD><STYLE ID=theStyle>\nbody{font-size: %gpt}\n",em_size);
-    if(showNumbers) fprintf(htmlFile,"ruby { display: inline-table; } ruby * { display: inline; line-height: 1.0; text-indent: 0; text-align: center; white-space: nowrap; } rb { display: table-row-group; font-size: %gpt; } rt { display: table-header-group; font-size: %dpt; color: red; background: white; } ",em_size,(scale==1 ? 9 : 12));
+    if(showNumbers) fprintf(htmlFile,"ruby { display: inline-table; } ruby * { display: inline; line-height: 1.0; text-indent: 0; text-align: center; } rb { display: table-row-group; font-size: %gpt; } rt { display: table-header-group; font-size: %dpt; color: red; background: white; } ",em_size,(scale==1 ? 9 : 12));
     else fprintf(htmlFile,"img{max-width:100%%}\n");
     fprintf(htmlFile,"</STYLE><SCRIPT><!-- \nif(document.all && document.getElementById && screen.logicalXDPI && document.styleSheets && document.styleSheets[0].cssText) {\n // make sure IE6+ can change size\n var pointsPerEM=12; // When rendering points, IE6+7+Firefox2 assume 12pt=(16*screen.deviceXDPI/screen.logicalXDPI)px, which is OK if at 96dpi or if correct scaling is applied. Do not try to better this by paying more attention to DPI, as it could be incorrect and would make this script's scaling drastically inconsistent from normal. \n for(var i=0; i<document.styleSheets.length; i++) document.styleSheets[i].cssText=document.styleSheets[i].cssText.replace(/%gpt/g,%g*1.0/pointsPerEM +'em');\n // also emulate max-width in IE6+\n document.styleSheets[0].cssText += 'body{overflow-x:hidden;}'; window.onload=function() { var w=document.body.clientWidth; if(window.innerWidth) w=window.innerWidth; var images=document.getElementsByTagName('img'); for(var i in images) if(w && images[i].scrollWidth>w) images[i].style.width=w+'px';}; }\n--></SCRIPT></HEAD>",em_size,em_size);
   }

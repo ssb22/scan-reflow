@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script to assist in correcting rotations
-# (c) Silas S. Brown 2006-2008,2019-2021, v1.1215
+# (c) Silas S. Brown 2006-2008,2019-2022, v1.122
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ pushd /cygdrive/c/Program*Files/GIMP*/bin
 mv "$1" "$OLDPWD"
 popd
 else gimp -d -s "$1" || exit 1; fi
-export NumFiles=$(cd "$HOME";ls .gimp*/tmp/*-area.png 2>/dev/null|wc -l)
+NumFiles=$(cd "$HOME";ls .gimp*/tmp/*-area.png 2>/dev/null|wc -l)
 export AsPng="$(echo "$1"|sed -e 's/\.[^\.]*$/.png/')"
 if ! echo "$1"|grep '\.' >/dev/null; then export AsPng="$1.png"; fi # (if no extension at all)
 if test $NumFiles == 0; then
@@ -106,7 +106,7 @@ else
   # (we also allow for very old versions of pnmrotate that don't have the -background=white switch)
   # (and we use 1.0,1.0,1.0 instead of 'white' in case rgb.txt isn't properly present on the system)
   (anytopnm "$1" | pnmtorle | rletopnm | (pnmrotate -background=1.0,1.0,1.0 -noantialias $Deg 2>/dev/null || pnmrotate -noantialias $Deg) | pnmtopng -compression 9 > "$1.new" && rm "$1" && mv "$1.new" "$AsPng"; touch $TempDirectory/.ready) &
-  export NeedRemove="$AsPng $NeedRemove" # hope no spaces in there
+  NeedRemove="$AsPng $NeedRemove" # hope no spaces in there
   shift
 fi
 (cd "$HOME";rm .gimp*/tmp/*-area.png)
