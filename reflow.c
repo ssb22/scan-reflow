@@ -71,11 +71,11 @@ typedef struct{int width,widthBytes,height;char* data;} Pbm;
    operations.  These functions could do with being faster
    (more than 1 bit at a time) */
 const int bitPos[]={128,64,32,16,8,4,2,1};
-inline int getBit(const Pbm* pbm,int x,int y) {
+static inline int getBit(const Pbm* pbm,int x,int y) {
   if(x<0||y<0||x>=pbm->width||y>=pbm->height) return 0;
   else return pbm->data[y*pbm->widthBytes+(x/8)] & bitPos[x%8];
 }
-inline void clearBit(Pbm* pbm,int x,int y) {
+static inline void clearBit(Pbm* pbm,int x,int y) {
   pbm->data[y*pbm->widthBytes+(x/8)] &= (0xFF-bitPos[x%8]);
 }
 void debug_horizLine(Pbm* pbm,int x1,int x2,int y) {
@@ -163,7 +163,7 @@ void pngtopng(const char* src,const char* dest,
   puts(s); system(s); free(s);
 }
 
-inline int getByte(const Pbm* pbm,int xDiv8,int y,int slightRotateDir,int slightRotateEvBytes) {
+static inline int getByte(const Pbm* pbm,int xDiv8,int y,int slightRotateDir,int slightRotateEvBytes) {
   if(slightRotateDir) {
     y += slightRotateDir*xDiv8/slightRotateEvBytes;
     if(y<0 || y>=pbm->height) return 0; /* white */
@@ -308,7 +308,7 @@ typedef struct {int top,bottom,left,right;} Bounds;
 
 int interlinearMode=0, singleCol_mode=0;
 
-inline int similarWidth(int w1,int w2) {
+static inline int similarWidth(int w1,int w2) {
   /* Used as an extra check before merging interlinear
      lines.  Needs to be tolerant of differences, but avoid
      silly things like 2 words on one line and 10 on the
@@ -476,8 +476,8 @@ void crop(const Pbm* pbm,Bounds* bounds) {
 
 int screenMode = 0, use_original = 0, hadPaperColour = 0;
 
-inline int max(int a,int b) { return (a>b)?a:b; }
-inline int min(int a,int b) { return (a<b)?a:b; }
+static inline int max(int a,int b) { return (a>b)?a:b; }
+static inline int min(int a,int b) { return (a<b)?a:b; }
 
 int wordCounter=0, /* in sync with filenames */
   htmlWordCounter=0, /* ditto */
@@ -670,7 +670,7 @@ void processEditSequence(FILE* texFile,FILE* htmlFile,float scale) {
   free(bounds);
 }
 
-main(int argc,const char* argv[]) {
+int main(int argc,const char* argv[]) {
   int argvLp=0; float scale;
   FILE *texFile, *boundsFile, *htmlFile=NULL;
   if(argc==1) {

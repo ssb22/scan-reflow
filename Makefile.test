@@ -1,0 +1,4 @@
+# -*- mode: makefile -*-
+test:
+	# at least check it compiles
+	$(CC) reflow.c
