@@ -38,6 +38,7 @@ and in China: https://gitee.com/ssb22/scan-reflow
 
 */
 
+#define  _GNU_SOURCE /* for asprintf */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
