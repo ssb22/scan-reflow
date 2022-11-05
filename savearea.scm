@@ -1,4 +1,4 @@
-;; GIMP "save area" function, (c) Silas S. Brown 2005, 2007, 2019, 2021.  Version 1.21
+;; GIMP "save area" function, (c) Silas S. Brown 2005, 2007, 2019, 2021-22.  Version 1.22
 ;; License: Apache 2 (see below)
 
 ;; INSTALLATION INSTRUCTIONS
@@ -39,6 +39,7 @@
 
 ;; 4.  Save this file (savearea.scm) into the "scripts"
 ;; subdirectory of the gimp directory, and restart Gimp.
+;; (If the "scripts" directory does not exist, create it.)
 
 ;; 5.  Open a new image, right-click on it, go to "File",
 ;; and there should be an option called "Save area".  It's
