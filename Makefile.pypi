@@ -1,0 +1,17 @@
+# -*- mode: Makefile -*-
+check-if-latex-papersize-version-is-changing:
+	@if grep 'Version [1-9][^.]*[.][0-9][0-9][0-9]$$' latex-papersize.py; then echo "3+ decimal digits in version number will now need another -e 's/[.][0-9][0-9]$$/&0/' in Makefile.pypi's sed expression"; false; fi
+	if (git diff;git diff --staged)|grep 'Version [0-9.]*$$'; then make -f Makefile.pypi update-latex-papersize-pypi; else true; fi
+update-latex-papersize-pypi:
+	mkdir latex_papersize
+	echo '"""latex-papersize is an application, not a library.  You can run it with "python -m latex_papersize" to see the options."""'> latex_papersize/__init__.py
+	sed -e 's/python latex-papersize.py/python -m latex_papersize/g' < latex-papersize.py > latex_papersize/__main__.py
+	echo "def placebo(): pass # for setuptools entry_points" >> latex_papersize/__main__.py # because there's no main()
+	echo "from setuptools import setup, find_packages;setup(name='latex_papersize',version='$$(grep 'Version [0-9.]*$$' latex-papersize.py|sed -e 's/.*Version //' -e 's/[.]$$//' -e 's/[.][1-9]$$/&0/')',entry_points={'console_scripts':['latex-papersize=latex_papersize.__main__:placebo']},license='Apache 2',platforms='any',url='http://ssb22.user.srcf.net/notes/#latex',author='Silas S. Brown',author_email='ssb$$(echo 22@ca)m.ac.uk',description='Change LaTeX paper size and margins to simulate any magnification',long_description=r'''$$(python3 latex_papersize/__main__.py)''',long_description_content_type='text/markdown',packages=find_packages(),classifiers=['Programming Language :: Python :: 2','Programming Language :: Python :: 3','License :: OSI Approved :: Apache Software License','Operating System :: OS Independent'],python_requires='>=2.0')" > setup.py
+	mv README.md .. # or it'll override our altered version
+	python3 setup.py sdist
+	twine upload dist/*
+	mv ../README.md .
+	rm -r latex_papersize.egg-info dist latex_papersize setup.py
+.PHONY: check-if-latex-papersize-version-is-changing
+.PHONY: update-latex-papersize-pypi
