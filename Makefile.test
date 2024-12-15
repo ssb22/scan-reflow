@@ -2,4 +2,5 @@
 test:
 	# at least check it compiles
 	$(CC) reflow.c
+	make -f Makefile.pypi test
 .PHONY: test

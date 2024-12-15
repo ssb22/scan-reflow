@@ -1,6 +1,8 @@
 # -*- mode: Makefile -*-
-check-if-latex-papersize-version-is-changing:
+all: test check-if-latex-papersize-version-is-changing
+test:
 	@if python3 latex-papersize.py --version|grep 'Version [1-9][^.]*[.][0-9][0-9][0-9]'; then echo "3+ decimal digits in version number will now need another -e 's/[.][0-9][0-9]$$/&0/' in Makefile.pypi's sed expression"; false; fi
+check-if-latex-papersize-version-is-changing:
 	if (git diff;git diff --staged)|grep 'Version [0-9.]*$$'; then make -f Makefile.pypi update-latex-papersize-pypi; else true; fi
 update-latex-papersize-pypi:
 	mkdir latex_papersize
@@ -14,4 +16,4 @@ update-latex-papersize-pypi:
 	mv ../README.md .
 	rm -r latex_papersize.egg-info dist latex_papersize setup.py
 .PHONY: check-if-latex-papersize-version-is-changing
-.PHONY: update-latex-papersize-pypi
+.PHONY: update-latex-papersize-pypi all test
