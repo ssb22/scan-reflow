@@ -3,7 +3,7 @@
 
 r"""
 Calculate LaTeX paper and margin settings for arbitrary magnification
-(C) Silas S. Brown, 2005-2009, 2016, 2019-20.  Version 1.64.
+(C) Silas S. Brown, 2005-2009, 2016, 2019-20, 2025.  Version 1.65.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -161,7 +161,7 @@ $(python latex-papersize.py 12 26 file.dvi)
 # and at https://gitlab.developers.cam.ac.uk/ssb22/scan-reflow
 # and in China: https://gitee.com/ssb22/scan-reflow
 
-import os, sys, math
+import os, sys
 try: from commands import getoutput # Python 2
 except: from subprocess import getoutput # Python 3
 def hasKey(a,b):
