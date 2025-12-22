@@ -1,0 +1,158 @@
+-- Notesorg - Lua version - (C) 2007 Silas S. Brown.
+
+-- Licensed under the Apache License, Version 2.0 (the "License");
+-- you may not use this file except in compliance with the License.
+-- You may obtain a copy of the License at
+-- 
+--     http://www.apache.org/licenses/LICENSE-2.0
+-- 
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- See the License for the specific language governing permissions and
+-- limitations under the License.
+
+io.input("c:\\Documents\\Word")
+Str = io.read("*a"):gsub(".*~SOF€÷[^×]*","",1):gsub("~EOF€×÷.*",""):gsub("\16"," ")
+io.input():close()
+
+projList = {}
+projDict = {}
+times = "×" -- because can't call :byte() on literals
+for i in Str:gmatch("[^\6]+") do
+   old_prjName = nil
+   if i=="×" then dat = nil
+   elseif i:byte()==times:byte() then
+      j=i:gsub(" .*","") -- first word
+      dat = i:sub(#j+2) -- rest (after the space, if any) (NB +2 not +1 because offsets start at 1 in Lua)
+      if i:byte(2)==times:byte() then
+         -- Double x, so switch for 1 line only
+         old_prjName = prjName
+         prjName = j:sub(3)
+      else prjName = j:sub(2)
+      end
+      if projDict[prjName] == nil then
+         projDict[prjName] = {}
+         table.insert(projList,prjName) -- keep order
+      end
+   else dat = i
+   end
+   if dat then table.insert(projDict[prjName],dat) end
+   if old_prjName then prjName = old_prjName end
+end
+
+function getNameNum(p)
+   return p:match("^([^%d]*)(%d*)$") -- (returns name,num - the num will be coerced to int when necessary)
+   -- TODO: This could cause a crash if any category has digits not at the end
+end
+
+function findArrayValue(t,v)
+   for j=1,#t do
+      if t[j]==v then return j end
+   end
+end
+function removeArrayValue(t,v)
+   for j=1,#t do
+      if t[j]==v then
+         table.remove(t,j)
+         break
+      end
+   end
+end
+
+-- Deal with any special 'order' category:
+if projDict.o then
+   wList = {} -- list of words for the ordering
+   for i in table.concat(projDict.o," "):gmatch("[^ ]+") do table.insert(wList,i) end
+   for i=1,#wList do
+      if not projDict[wList[i]] then
+         -- non-existent category, so stop just before this point
+         while #wList >= i do table.remove(wList) end
+         break
+      end
+   end
+   rWList = {} for i,w in ipairs(wList) do table.insert(rWList,1,w) end -- reversing it, so right order for insertion at top
+   table.insert(rWList,"o") -- make sure the "o" category itself comes first
+   for i,w in ipairs(rWList) do
+      -- move 'w' to the top:
+      removeArrayValue(projList,w)
+      table.insert(projList,1,w)
+   end
+end
+
+-- Renumber 0s to 1s (and 1s to 2s etc if necessary) :
+zerosToRenumber = {}
+for i,p in ipairs(projList) do
+   name,num = getNameNum(p)
+   if num=="0" then zerosToRenumber[name]=1 end
+end
+if next(zerosToRenumber) then -- NOT #zerosToRenumber>0 - '#' works only on array tables
+   projList2 = {}
+   for k,v in ipairs(projList) do projList2[k]=v end
+   function gt(x,y) return x>y end
+   table.sort(projList2,gt) -- reverse sort, so higher numbers are encountered 1st, for renaming
+   for i,p in ipairs(projList2) do
+      name,num = getNameNum(p)
+      if #num>0 and zerosToRenumber[name] then
+         newP=string.format("%s%d",name,num+1)
+         for j=1,#projList do
+            if projList[j]==p then
+               projList[j] = newP
+               break
+            end
+         end
+         projDict[newP] = projDict[p]
+         projDict[p] = nil
+      end
+   end
+end
+
+-- Put the numbered items where they should go :
+projList2 = {}
+for k,v in ipairs(projList) do projList2[k]=v end
+table.sort(projList2) -- so encounter earlier numbers first
+for i,p in ipairs(projList2) do
+   name, num = getNameNum(p)
+   if num=="1" then -- make sure it goes first
+      if #name==0 then
+         removeArrayValue(projList,p)
+         table.insert(projList,1,p)
+      elseif projDict[name] then
+         removeArrayValue(projList,p)
+         table.insert(projList,findArrayValue(projList,name),p)
+      -- else leave it alone
+      end
+   elseif num and #num>0 and (num+0) > 1 then -- (+0 because otherwise complains about comparing num with string, and note we need to explicityl say #num>0 not just #num to stop (num+0) being evaluated on empty strings)
+      prevP = string.format("%s%d",name,num-1)
+      if projDict[prevP] then -- put it just after the previous one
+         removeArrayValue(projList,p)
+         table.insert(projList,findArrayValue(projList,prevP)+1,p)
+      elseif projDict[name] then
+         removeArrayValue(projList,p)
+         table.insert(projList,findArrayValue(projList,name)+1,p)
+      -- else leave it alone
+      end
+   end
+end
+
+-- summary - rm some duplicates
+projList2,lastN = {},nil
+for i,p in ipairs(projList) do
+   name,num = getNameNum(p)
+   if #name==0 then table.insert(projList2,p) -- a number-only category
+   elseif not (name==lastN) then table.insert(projList2,name) end -- the ()s after "not" are essential! this is not python
+   lastN=name
+end
+
+io.output("C:\\sorted.out.txt")
+io.write("labels: ")
+io.write(table.concat(projList2,", "))
+io.write("\n")
+for i,p in ipairs(projList) do
+   io.write("×")
+   io.write(p)
+   io.write(" ")
+   for ii,j in ipairs(projDict[p]) do io.write(j) io.write("\n") end
+end
+io.flush()
+io.close()

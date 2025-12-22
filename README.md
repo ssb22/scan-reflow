@@ -1,6 +1,6 @@
 # scan-reflow
-Unix scripts for large-print handouts etc, from http://ssb22.user.srcf.net/notes
-(also mirrored at http://ssb22.gitlab.io/notes just in case)
+Unix scripts for large-print handouts etc, from https://ssb22.user.srcf.net/notes
+(also [mirrored on GitLab Pages](https://ssb22.gitlab.io/notes) just in case)
 
 Enlarging material in LaTeX
 ---------------------------
@@ -54,19 +54,17 @@ Compensating for rotated scans
 
 If you have low vision then you may find it difficult and time-consuming to get a perfectly straight scan of a page.  If you are scanning many pages then it can be quicker to take rotated scans and compensate in software.  The above image reflow utility does compensate for slight rotation but not major rotation.  However, if you install the above GIMP plugin then you can try `derotate.sh`, a shell script to help you quickly correct rotations. It also converts the images to PNG for you if they’re not already in that format, so if your scanning software outputs a batch of TIFF files then you can simply run it on that batch without further ado.  Follow the instructions that it gives on startup.  Note: some slight rotation may still remain, so do not use the reflow utility’s `--norotate` option; that option is to be used only if the source material is not a scan.
 
+Other
+-----
+* [Large-print notes on EPOC or Symbian](psion.md)
+
 Copyright and Trademarks
 ------------------------
 
 © Silas S. Brown, licensed under Apache 2.
-
-* Acrobat is an Adobe trademark.
-
-* Apache is a registered trademark of The Apache Software Foundation.
-
-* PostScript is a registered trademark of Adobe Systems Inc.
-
-* Python is a trademark of the Python Software Foundation.
-
-* SeaMonkey is a registered trademark of The Mozilla Foundation.
-
-* Any other trademarks I mentioned without realising are trademarks of their respective holders.
+Acrobat is an Adobe trademark.
+Apache is a registered trademark of The Apache Software Foundation, which from February to July 2023 acknowledged the Chiricahua Apache, the Choctaw Apache, the Fort Sill Apache, the Jicarilla Apache, the Mescalero Apache, the Lipan Apache, the Apache Tribe of Oklahoma, the Plains Apache, the San Carlos Apache, the Tonto Apache, the White Mountain Apache, the Yavapai Apache and the Apache Alliance.
+PostScript is a registered trademark of Adobe Systems Inc.
+Python is a trademark of the Python Software Foundation.
+SeaMonkey is a registered trademark of The Mozilla Foundation.
+Any other trademarks I mentioned without realising are trademarks of their respective holders.
