@@ -41,17 +41,16 @@ export Count=1
 echo '\documentclass{article}\usepackage[pdftex]{graphicx}\usepackage{geometry}\geometry{verbose,a4paper,tmargin=10mm,bmargin=10mm,lmargin=10mm,rmargin=10mm,headheight=0mm,headsep=0mm,footskip=0mm}\pagestyle{empty}\begin{document}\raggedright\noindent' > handout.tex
 IFS=$'\n' # (as $HOME may have spaces in it on cygwin)
 for N in $(ls -r -t "$HOME"/.config/GIMP/*/tmp/*-area.png "$HOME"/.gimp*/tmp/*-area.png /tmp/gimp/*/*-area.png "$HOME/Library/Application Support/Gimp/tmp"/*-area.png "$HOME/Library/Application Support/GIMP"/*/tmp/*-area.png /var/folders/*/*/*/gimp/*/*png 2>/dev/null); do
-  unset IFS
+  unset IFS # important for test $( ... sed ... ) to work
   if ! test -e "$N"; then continue; fi # wrong directory
   mv "$N" $Count.png || (cp "$N" $Count.png && rm "$N")
   export Geom=$(pngtopnm $Count.png | head -2 | tail -1)
-  if test $(echo $Geom | sed -e 's/ / -gt /'); then
+  if test $(echo $Geom | sed 's/ / -gt /'); then
     # Width is greater than height - better put it landscape
     RotStart='\rotatebox{90}{'
     RotEnd='}'
-  else
-      unset RotStart RotEnd; fi
-  Aspect=$[1000*$(echo $Geom|sed -e 's/ /\//g')]
+  else unset RotStart RotEnd; fi
+  Aspect=$[1000*$(echo $Geom|sed 's/ /\//g')]
   if test $Aspect -gt 1414 || test $Aspect -lt 707; then
     # better scale by the longest side
     ResizeParams="{$(echo $'\041')}{1\\textheight}"
@@ -77,7 +76,6 @@ if [ "$areas2pdf_force_problem" ] || [ ! -e handout.pdf ]; then
 fi
 mv handout.pdf "$HOME"
 cd
-#rm -rf $TmpDir
-echo "$TmpDir"
+rm -rf $TmpDir
 echo
 echo "Output was written to ~/handout.pdf"
