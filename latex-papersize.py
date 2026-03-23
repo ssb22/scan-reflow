@@ -223,3 +223,4 @@ else:
   existing_left_margin_mm = min(map(lambda x:x[0],bbox))*25.4/72
   existing_top_margin_mm = paper_height*10-max(map(lambda x:x[3],bbox))*25.4/72
   print("dvips -T %dmm,%dmm -O %.1fmm,%.1fmm -x %d %s" % (paper_width,paper_height,margin_left - existing_left_margin_mm,margin_top - existing_top_margin_mm,1000*paper_magstep+0.5,sys.argv[3]))
+# ruff:noqa: E401,E701,E702,E722

@@ -15,5 +15,16 @@ update-latex-papersize-pypi:
 	twine upload dist/*
 	mv ../README.md .
 	rm -r latex_papersize.egg-info dist latex_papersize setup.py
+upload-src2epub-pypi:
+	mkdir src2epub
+	cp src2epub.py src2epub/__init__.py
+	echo "import src2epub;src2epub.main()" > src2epub/__main__.py
+	echo "from setuptools import setup, find_packages;setup(name='src2epub',version='0.2',entry_points={'console_scripts':['src2epub=src2epub.__init__:main']},license='Public Domain',platforms='any',author='Silas S. Brown',author_email='ssb$$(echo 22@ca)m.ac.uk',description='Convert source code files to EPUB in case you want to read a codebase on an e-reader (uses EbookLib)',long_description=open('src2epub.py').read().split('\"\"\"')[1].replace('epub.py','epub').replace(chr(10),chr(10)+chr(10)),long_description_content_type='text/markdown',packages=find_packages(),classifiers=['Programming Language :: Python :: 3','License :: Public Domain','Operating System :: OS Independent'],python_requires='>=3.0')" > setup.py # we called it 0.2 because 0.1 was accidentally uploaded with a singular "code file" in description: can actually take multiple code files
+	mv README.md ..
+	python3 setup.py sdist
+	twine upload dist/*
+	mv ../README.md .
+	rm -r src2epub.egg-info dist src2epub setup.py
+.PHONY: upload-src2epub-pypi
 .PHONY: check-if-latex-papersize-version-is-changing
 .PHONY: update-latex-papersize-pypi all test

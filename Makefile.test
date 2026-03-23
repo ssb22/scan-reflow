@@ -3,4 +3,5 @@ test:
 	# at least check it compiles
 	$(CC) reflow.c
 	make -f Makefile.pypi test
+	ruff check src2epub.py pdf2wechat.py latex-papersize.py
 .PHONY: test
