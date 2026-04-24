@@ -2,7 +2,7 @@
 """
 src2epub.py - Convert source files to EPUB suitable for large-font configurations on Zenithal Bistable Display (eInk) devices
 (Tested on a secondhand 2011 Nook Simple Touch)
-Silas S. Brown 2026 - public domain - no warranty
+v0.3 - Silas S. Brown 2026 - public domain - no warranty
 
 Usage: python src2epub.py code-files [output.epub]
 """
@@ -12,6 +12,7 @@ from datetime import datetime
 from ebooklib import epub  # sudo apt install python3-ebooklib, or pip install ebooklib
 import pygments.lexers
 from pygments.token import Token as T
+from pygments.util import ClassNotFound
 
 css = """body {
   line-height: 1.6;
@@ -61,14 +62,15 @@ def src2epub(input_files, output_file=None):
         chapter.add_link(href='styles.css',rel='stylesheet',type='text/css')
         book.add_item(chapter)
         book.spine.append(chapter)
-        book.toc.append(epub.Link(f'content{n}.xhtml', os.path.basename(i), f'id{n}'))
+        book.toc.append(epub.Link(f'content{n}.xhtml', os.path.basename(i)+(f' ({os.path.dirname(i)})' if os.path.dirname(i) else ''), f'id{n}'))
     book.add_item(epub.EpubNcx())
-    output_file = output_file or f'{os.path.splitext(input_files[0])[0]}{os.extsep}epub'
+    output_file = output_file or f'{os.path.splitext(os.path.basename(input_files[0]))[0]}{os.extsep}epub'
     epub.write_epub(output_file, book)
     print(f"Created {output_file} ({os.path.getsize(output_file) / 1024:.1f} KB), {totLines} paragraph-lines")
 
 def src2html(input_file):
-    lexer = pygments.lexers.get_lexer_for_filename(input_file)
+    try: lexer = pygments.lexers.get_lexer_for_filename(input_file)
+    except ClassNotFound: lexer = pygments.lexers.TextLexer(stripnl=False)
     code = open(input_file).read()
     lines = code.splitlines()
     highlighted,lineNo,lineToks = [],1,[]
