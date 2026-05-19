@@ -1,5 +1,6 @@
-;; GIMP "save area" function, (c) Silas S. Brown 2005, 2007, 2019, 2021-22.  Version 1.22
-;; License: Apache 2 (see below)
+;; GIMP "save area" function
+;; Silas S. Brown 2005-26 - public domain - no warranty
+;; Version 1.3
 
 ;; INSTALLATION INSTRUCTIONS
 ;; -------------------------
@@ -30,16 +31,18 @@
 ;; folders for .gimp.
 ;; On a Mac, try Library/Application Support/Gimp
 
-;; 3. If your GIMP is 2.10+, replace the word NORMAL with 0
-;; in this file (Gimp 2.10+ no longer defines NORMAL).
-;; If your GIMP is 2.8 or below, BEWARE that if it's ever
-;; upgraded to 2.10+ you will have to make this replacement
-;; and must do so under .config/GIMP not the old .gimp-2.8
-;; (which is NOT automatically deleted by the upgrade).
+;; 3.  If your GIMP is 3.x, save this file (savearea.scm)
+;; into a subdirectory of the "plug-ins" subdirectory of the
+;; gimp directory, e.g. call it
+;; ~/.config/GIMP/3.2/plug-ins/savearea/savearea.scm
+;; and chmod +x this file and add a line at the top saying:
+;; #!/usr/bin/env gimp-script-fu-interpreter-3.0
 
-;; 4.  Save this file (savearea.scm) into the "scripts"
-;; subdirectory of the gimp directory, and restart Gimp.
-;; (If the "scripts" directory does not exist, create it.)
+;; For 2.x and 1.x, save this file into the "scripts"
+;; subdirectory of the gimp directory.  (Create any of these
+;; directories that don't exist.)
+
+;; 4.  Restart GIMP.
 
 ;; 5.  Open a new image, right-click on it, go to "File",
 ;; and there should be an option called "Save area".  It's
@@ -80,18 +83,6 @@
 
 ;; END OF INSTALLATION INSTRUCTIONS
 
-;; Licensed under the Apache License, Version 2.0 (the "License");
-;; you may not use this file except in compliance with the License.
-;; You may obtain a copy of the License at
-
-;;     http://www.apache.org/licenses/LICENSE-2.0
-
-;; Unless required by applicable law or agreed to in writing, software
-;; distributed under the License is distributed on an "AS IS" BASIS,
-;; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-;; See the License for the specific language governing permissions and
-;; limitations under the License.
-
 ;; Where to find history:
 ;; on GitHub at https://github.com/ssb22/scan-reflow
 ;; and on GitLab at https://gitlab.com/ssb22/scan-reflow
@@ -102,36 +93,60 @@
 ;; ------------------------------------------------------
 
 
+(define (CAR x) (cond ((vector? x) (CAR (vector-ref x 0)))
+                      ((pair? x) (CAR (car x)))
+                      (else x)))
+(define (gimp-old?) (let ((v (CAR (gimp-version))))
+                   ;; v1/2 = old
+                   (and (char=? (string-ref v 1) #\.)
+                        (or (char=? (string-ref v 0) #\1)
+                            (char=? (string-ref v 0) #\2)))))
 (define (saveArea img layer)
   (let* ((selection (gimp-selection-bounds img))
     (x1 (cadr selection))
     (y1 (caddr selection))
-    (x2 (car (cdr (cdr (cdr selection)))))
-    (y2 (car (cdr (cdr (cdr (cdr selection))))))
+    (x2 (CAR (cdr (cdr (cdr selection)))))
+    (y2 (CAR (cdr (cdr (cdr (cdr selection))))))
     (width (- x2 x1))
     (height (- y2 y1))
-    (newType (car (gimp-image-base-type img)))
+    (newType (CAR (if (gimp-old?)
+                  (gimp-image-base-type img)))
+                  (gimp-image-get-base-type img))
     (myNewType (if (equal? newType 1) 1 0))  ;; "indexed" type (2) is awkward so convert it to RGB (0).  May get a completely-black area anyway, but at least will be able to save as PNG to get the dimensions for derotate.sh.  For other uses I suggest batch-converting first as mentioned in instructions above.
-    (newImg (car (gimp-image-new width height myNewType)))
-    (newLayer (car (gimp-layer-new newImg width height (* myNewType 2) "layer 1" 100 NORMAL)))
-    (_ (gimp-image-add-layer newImg newLayer 0))
-    (disp (car (gimp-display-new newImg))) ;; MUST do this otherwise gimp may corrupt when save
-    (_ (gimp-edit-copy layer))
-    (floatingLayer (car (gimp-edit-paste newLayer 0)))
+    (newImg (CAR (gimp-image-new width height myNewType)))
+    (newLayer (CAR (if (gimp-old?)
+                       (gimp-layer-new newImg width height (* myNewType 2) "layer 1" 100 0) ;; NORMAL was defined as 0 up to GIMP 2.8, need to use 0 in 2.10+
+                       (gimp-layer-new newImg "layer 1" width height myNewType 100 0)))) ;; 3.x changed these params around
+    (_ (if (gimp-old?)
+       (gimp-image-add-layer newImg newLayer 0)
+       (gimp-image-insert-layer newImg newLayer 0 0)))
+    (disp (CAR (gimp-display-new newImg))) ;; MUST do this otherwise gimp may corrupt when save
+    (_ (gimp-edit-copy (if (gimp-old?) layer (vector layer))))
+    (floatingLayer (CAR (gimp-edit-paste newLayer 0)))
     (_ (gimp-floating-sel-anchor floatingLayer))
-    (_ (plug-in-autocrop 1 newImg newLayer))
-    (file (car (gimp-temp-name "-area.png")))
-    (_ (file-png-save 1 newImg newLayer file file 0 9 0 0 0 0 0))
+    (_ (if (gimp-old?) (plug-in-autocrop 1 newImg newLayer)
+           (gimp-image-autocrop newImg newLayer)))
+    (file (CAR
+           (if (gimp-old?) (gimp-temp-name "-area.png")
+               (gimp-temp-file "-area.png"))))
+    (_ (if (gimp-old?) (file-png-save 1 newImg newLayer file file 0 9 0 0 0 0 0)
+           (file-png-export #:run-mode 1 #:image newImg #:file file #:options 0)))
     (_ (gimp-display-delete disp))
     ) ()))
 
-   (script-fu-register "saveArea"
-      "<Image>/File/Save area"
-      "Saves the selected area to a PNG file"
-      "Silas S. Brown"
-      "Silas S. Brown"
-      "2005"
-      "" ; any image type
-      SF-IMAGE "Image" 0
-      SF-DRAWABLE "Layer" 0
-      )
+(if (gimp-old?)
+    (script-fu-register "saveArea"
+       "<Image>/File/Save area"
+       "Saves the selected area to a PNG file"
+       "Silas S. Brown" "Silas S. Brown" "2005"
+       "" ;; any image type
+       SF-IMAGE "Image" 0 SF-DRAWABLE "Layer" 0))
+    ;; 3.0 needs to split into menu-register:
+    (begin
+      (script-fu-register "saveArea"
+         "Save area"
+         "Saves the selected area to a PNG file"
+         "Silas S. Brown" "Silas S. Brown" "2005"
+         "" ;; any image type
+         SF-IMAGE "Image" 0 SF-DRAWABLE "Layer" 0)
+      (script-fu-menu-register "saveArea" "<Image>/File"))

@@ -3,7 +3,7 @@ all: test check-if-latex-papersize-version-is-changing
 test:
 	@if python3 latex-papersize.py --version|grep 'Version [1-9][^.]*[.][0-9][0-9][0-9]'; then echo "3+ decimal digits in version number will now need another -e 's/[.][0-9][0-9]$$/&0/' in Makefile.pypi's sed expression"; false; fi
 check-if-latex-papersize-version-is-changing:
-	if (git diff;git diff --staged)|grep 'Version [0-9.]*$$'; then make -f Makefile.pypi update-latex-papersize-pypi; else true; fi
+	if (git diff latex-papersize.py;git diff --staged latex-papersize.py)|grep 'Version [0-9.]*$$'; then make -f Makefile.pypi update-latex-papersize-pypi; else true; fi
 update-latex-papersize-pypi:
 	mkdir latex_papersize
 	echo '"""latex-papersize is an application, not a library.  You can run it with "python -m latex_papersize" to see the options."""'> latex_papersize/__init__.py
