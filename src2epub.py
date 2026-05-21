@@ -2,7 +2,7 @@
 """
 src2epub.py - Convert source files to EPUB suitable for large-font configurations on Zenithal Bistable Display (eInk) devices
 (Tested on a secondhand 2011 Nook Simple Touch)
-v0.3 - Silas S. Brown 2026 - public domain - no warranty
+v0.4 - Silas S. Brown 2026 - public domain - no warranty
 
 Usage: python src2epub.py code-files [output.epub]
 """
@@ -71,7 +71,7 @@ def src2epub(input_files, output_file=None):
 def src2html(input_file):
     try: lexer = pygments.lexers.get_lexer_for_filename(input_file)
     except ClassNotFound: lexer = pygments.lexers.TextLexer(stripnl=False)
-    code = open(input_file).read()
+    code = open(input_file).read().replace("\t"," "*4)
     lines = code.splitlines()
     highlighted,lineNo,lineToks = [],1,[]
     for token_type,value in lexer.get_tokens(code):

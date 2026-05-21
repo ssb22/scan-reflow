@@ -3,7 +3,7 @@
 """Source code to PDF (works in larger print sizes)
 with pygments and reportlab
 
-Silas S. Brown 2026 - public domain - no warranty"""
+v0.2 - Silas S. Brown 2026 - public domain - no warranty"""
 
 import reportlab # sudo apt install python3-reportlab or pip install reportlab
 import pygments, pygments.lexers
@@ -18,6 +18,7 @@ from optparse import OptionParser
 parser = OptionParser("src2pdf [options] (input files)")
 parser.add_option("--margin",type="int",default=15,help="Margin in mm")
 parser.add_option("--size",type="int",default=18,help="Font size in pt")
+parser.add_option("--tabs",type="int",default=4,help="Tab spacing")
 parser.add_option('--style',default='default',help="pygments style name")
 
 def make_space_non_collapseable(s):
@@ -56,7 +57,7 @@ def src2pdf(input_file,output_file=None):
             textColor=reportlab.lib.colors.black))
         for lineNo,line in enumerate(convert_pygments_html_to_reportlab(
                 pygments.highlight(
-                    open(input_file,'r',encoding='utf-8').read(),
+                    open(input_file,'r',encoding='utf-8').read().replace('\t'," "*options.tabs),
                     pygments.lexers.get_lexer_for_filename(input_file),
                     pygments.formatters.HtmlFormatter(
                         noclasses=True,linenos=False,
@@ -64,7 +65,9 @@ def src2pdf(input_file,output_file=None):
                 )).split('\n'))])
     print(f"Created: {output_file}")
 
-if __name__ == '__main__':
+def main():
+    global options
     options,args = parser.parse_args()
     for f in args: src2pdf(f)
+if __name__ == '__main__': main()
 # ruff:noqa:E401,E701

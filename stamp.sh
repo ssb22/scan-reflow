@@ -1,7 +1,7 @@
 #!/bin/bash
 # PDF filename stamping script (pdflatex + pdftk)
 # Stamps the filename of a PDF file on its top right
-# Silas S. Brown 2026 - public domain
+# Silas S. Brown 2026 - public domain - no warranty
 
 # (Useful if students have submitted work by email
 # but with names/IDs only in the filename and you need
