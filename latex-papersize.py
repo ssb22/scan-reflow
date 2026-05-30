@@ -3,7 +3,7 @@
 
 r"""
 Calculate LaTeX paper and margin settings for arbitrary magnification
-(C) Silas S. Brown, 2005-2009, 2016, 2019-20, 2025.  Version 1.65.
+(C) Silas S. Brown, 2005-2009, 2016, 2019-20, 2025-26.  Version 1.66.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -161,7 +161,7 @@ $(python latex-papersize.py 12 26 file.dvi)
 # and at https://gitlab.developers.cam.ac.uk/ssb22/scan-reflow
 # and in China: https://gitee.com/ssb22/scan-reflow
 
-import os, sys
+import os, sys, subprocess
 try: from commands import getoutput # Python 2
 except: from subprocess import getoutput # Python 3
 def hasKey(a,b):
@@ -205,7 +205,8 @@ if sys.argv[3]=="tex" or sys.argv[3]=="pdftex":
     s += "\\mag=%d \\pdfpagewidth=%d true mm \\pdfpageheight=%d true mm \\pdfhorigin=0 mm \\pdfvorigin=-12.95 mm \\paperwidth=%d true mm \\paperheight=%d true mm" % (1000*paper_magstep,paper_width,paper_height,paper_width,paper_height) # the -12.95mm seems to be a constant regardless of magnification (previous version had -14 but it sems -12.95 is more accurate - at least 12.9 is too small and 13 is too big).  Need \paperwidth and \paperheight in there as well in case using hyperref.
   print(s)
 else:
-  r = os.system("dvips -T %dmm,%dmm -x %d %s -o bbox_test.ps" % (paper_width*10,paper_height*10,1000*paper_magstep+0.5,sys.argv[3]))
+  r = 1
+  subprocess.call(["dvips","-T","%dmm,%dmm"%(paper_width*10,paper_height*10),"-x","%d"%(1000*paper_magstep+0.5),sys.argv[3],"-o","bbox_test.ps"])
   assert not r, "dvips failed"
   # Now, that would have got the origin wrong.  I can't
   # figure out how dvips origin and magstep is supposed to
