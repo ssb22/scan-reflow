@@ -1,0 +1,14 @@
+# -*- mode: Makefile -*-
+ctan:
+	wget https://mirrors.ctan.org/support/latex-papersize.zip
+	unzip latex-papersize.zip
+	cp latex-papersize.py latex-papersize/
+	cd latex-papersize && python latex-papersize.py --texhelp > latex-papersize.tex
+	cd latex-papersize && pdflatex latex-papersize.tex
+	rm latex-papersize/*.aux latex-papersize/*.log
+	chmod 664 latex-papersize/*
+	chmod 775 latex-papersize/latex-papersize.py
+	zip -9r latex-papersize.zip latex-papersize/
+	rm -rf latex-papersize/
+	@echo;echo "Use Upload button on https://ctan.org/pkg/latex-papersize with latex-papersize.zip" # press button "Show all fields" at top right if need to change homepage,Git,etc links
+.PHONY: ctan
