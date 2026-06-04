@@ -1,8 +1,11 @@
 # -*- mode: Makefile -*-
+# Makefile to use if we need to re-release latex-papersize to CTAN
 ctan:
 	wget https://mirrors.ctan.org/support/latex-papersize.zip
 	unzip latex-papersize.zip
-	cp latex-papersize.py latex-papersize/
+	if ! grep Silas latex-papersize/README; then echo "Author: Silas S. Brown ssb22@cam.ac.uk" >> latex-papersize/README; fi # try not to repeat the mistake of grabbing the old README that doesn't have the required author field
+	sed -i 's/consists of a python script to calculate/calculates/' latex-papersize/README # it's not just Python anymore
+	cp latex-papersize.py latex-papersize.sty latex-papersize/
 	cd latex-papersize && python latex-papersize.py --texhelp > latex-papersize.tex
 	cd latex-papersize && pdflatex latex-papersize.tex
 	rm latex-papersize/*.aux latex-papersize/*.log

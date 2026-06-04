@@ -8,8 +8,13 @@ Enlarging material in LaTeX
 Simply adding instructions such as `\Large` is not enough, as it doesn’t enlarge everything, and it may be difficult to achieve exactly the desired size.
 
 It’s more effective to change the LaTeX paper size and margin settings to simulate small paper, then magnify this up to the real paper size.  The exact settings can be adjusted to achieve virtually any desired font size, and everything is enlarged to that size.
+This adds some clarity for
+low-vision users because fonts like Computer Modern Roman have different
+versions at different sizes and the small-sized versions
+are often meant to be clearer.
 
-You can generate the settings using my Python script `latex-papersize.py` (works in both Python 2 and Python 3).  See the `--help` text or the comments at the beginning of the script for how to use it.
+If you are using LaTeX with a PDF back-end (i.e. `pdflatex`,
+`xelatex` or `lualatex`) you can use my `latex-papersize.sty`.  Alternatively you can generate the settings using my older Python script `latex-papersize.py` (works in both Python 2 and Python 3).  See the `--help` text or the comments at the beginning of the script for how to use it.
 
 latex-papersize is also on CTAN and in the TeX Live distribution, usually packaged in `texlive-extra-utils` or `texlive-latex-extra` by GNU/Linux distributions.  It was previously called `LatexPaper.py` and older versions are Python 2 only.
 
