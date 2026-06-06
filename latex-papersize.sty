@@ -1,5 +1,5 @@
 % Calculate LaTeX paper and margin settings for arbitrary magnification
-% (C) Silas S. Brown 2026, Version 1.69
+% (C) Silas S. Brown 2026, Version 1.7
 
 % Please see the documentation file for more information.
 
@@ -37,8 +37,9 @@
     extrabottom .dim_set:N = \extrabottom_dim,
     extrabottom .initial:n = 0pt}
 \ProcessKeysOptions { latex-papersize }
+\AtBeginDocument{
 \fp_set:Nn \magnification_fp { \desiredsize_fp / \basesize_fp }
-\ifdefined\pdfoutput\ifnum\pdfoutput=0\PackageError{latex-papersize}{DVI~output~mode~is~not~supported\MessageBreak~by~latex-papersize.sty.\MessageBreak~This~package~requires~PDF~output\MessageBreak~(pdflatex,~lualatex,~or~xelatex).~\MessageBreak~For~DVI/dvips~workflows,~please~use~the~older~latex-papersize~Python~script}\fi\fi
+\ifdefined\pdfoutput\ifnum\pdfoutput=0\PackageError{latex-papersize}{DVI~output~mode~is~not~supported\MessageBreak~by~latex-papersize.sty.\MessageBreak~This~package~requires~PDF~output\MessageBreak~(pdflatex,~lualatex,~or~xelatex).~\MessageBreak~For~DVI/dvips~workflows,~please~use~the~older~latex-papersize~Python~script}{}\fi\fi
 
 \fp_set:Nn \realPaperwidth_fp { \dim_to_decimal_in_unit:nn { \paperwidth_dim } { 1mm } }
 \fp_set:Nn \realPaperheight_fp { \dim_to_decimal_in_unit:nn { \paperheight_dim } { 1mm } }
@@ -81,7 +82,7 @@
 \fi
 \paperwidth    = \fp_use:N \realPaperwidth_fp true mm
 \paperheight   = \fp_use:N \realPaperheight_fp true mm
-
+}
 \ExplSyntaxOff
 
 \endinput
