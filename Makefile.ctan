@@ -8,7 +8,7 @@ ctan:
 	cp latex-papersize.py latex-papersize.sty latex-papersize/
 	cd latex-papersize && python latex-papersize.py --texhelp > latex-papersize.tex
 	cd latex-papersize && pdflatex latex-papersize.tex
-	rm latex-papersize/*.aux latex-papersize/*.log
+	rm latex-papersize/*.aux latex-papersize/*.log latex-papersize/*.out
 	chmod 664 latex-papersize/*
 	chmod 775 latex-papersize/latex-papersize.py
 	zip -9r latex-papersize.zip latex-papersize/
