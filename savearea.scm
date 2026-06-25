@@ -1,6 +1,11 @@
 ;; GIMP "save area" function
-;; Silas S. Brown 2005-26 - public domain - no warranty
+;; (c) Silas S. Brown 2005-26.  License: Apache 2
 ;; Version 1.3
+;; (I did say "public domain no warranty" but apparently
+;; some corporate offices don't trust that.  Apache 2 lets
+;; them know I don't have a silly patent up my sleeve that
+;; I'd try to enforce, so their policy might accept it more
+;; easily if you need to use this at work.)
 
 ;; INSTALLATION INSTRUCTIONS
 ;; -------------------------

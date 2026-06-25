@@ -3,7 +3,13 @@
 """Source code to PDF (works in larger print sizes)
 with pygments and reportlab
 
-v0.2 - Silas S. Brown 2026 - public domain - no warranty"""
+v0.2 (c) Silas S. Brown 2026.  License: Apache 2
+  (I did say "public domain no warranty" but apparently
+  some corporate offices don't trust that.  Apache 2 lets
+  them know I don't have a silly patent up my sleeve that
+  I'd try to enforce, so their policy might accept it more
+  easily if you need to use this at work.)
+"""
 
 import reportlab # sudo apt install python3-reportlab or pip install reportlab
 import pygments, pygments.lexers

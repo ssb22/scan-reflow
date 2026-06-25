@@ -20,7 +20,7 @@ upload-src2epub-pypi:
 	mkdir src2epub
 	cp src2epub.py src2epub/__init__.py
 	echo "import src2epub;src2epub.main()" > src2epub/__main__.py
-	echo "from setuptools import setup, find_packages;setup(name='src2epub',version='0.4',entry_points={'console_scripts':['src2epub=src2epub.__init__:main']},license='Public Domain',platforms='any',author='Silas S. Brown',author_email='ssb$$(echo 22@ca)m.ac.uk',description='Convert source code files to EPUB in case you want to read a codebase on an e-reader (uses EbookLib)',long_description=open('src2epub.py').read().split('\"\"\"')[1].replace('epub.py','epub').replace(chr(10),chr(10)+chr(10)),long_description_content_type='text/markdown',packages=find_packages(),classifiers=['Programming Language :: Python :: 3','License :: Public Domain','Operating System :: OS Independent'],python_requires='>=3.0')" > setup.py
+	echo "from setuptools import setup, find_packages;setup(name='src2epub',version='0.4',entry_points={'console_scripts':['src2epub=src2epub.__init__:main']},license='Apache 2',platforms='any',author='Silas S. Brown',author_email='ssb$$(echo 22@ca)m.ac.uk',description='Convert source code files to EPUB in case you want to read a codebase on an e-reader (uses EbookLib)',long_description=open('src2epub.py').read().split('\"\"\"')[1].replace('epub.py','epub').replace(chr(10),chr(10)+chr(10)),long_description_content_type='text/markdown',packages=find_packages(),classifiers=['Programming Language :: Python :: 3','License :: OSI Approved :: Apache Software License','Operating System :: OS Independent'],python_requires='>=3.0')" > setup.py
 	(echo '[build-system]';echo 'requires = ["setuptools >= 64"]';echo 'build-backend = "setuptools.build_meta"') > pyproject.toml
 	mv README.md ..
 	python3 setup.py sdist
@@ -31,7 +31,7 @@ upload-src2pdf-pypi:
 	mkdir src2pdf
 	cp src2pdf.py src2pdf/__init__.py
 	echo "import src2pdf;src2pdf.main()" > src2pdf/__main__.py
-	echo "from setuptools import setup, find_packages;setup(name='src2pdf',version='0.2.7',entry_points={'console_scripts':['src2pdf=src2pdf.__init__:main']},license='Public Domain',platforms='any',author='Silas S. Brown',author_email='ssb$$(echo 22@ca)m.ac.uk',description='Convert source code files to PDF using ReportLab, works in larger print',long_description=\"\"\"$$(python3 src2pdf.py --help|sed 's/$$/\\n/')\"\"\",long_description_content_type='text/markdown',packages=find_packages(),classifiers=['Programming Language :: Python :: 3','License :: Public Domain','Operating System :: OS Independent'],python_requires='>=3.0')" > setup.py
+	echo "from setuptools import setup, find_packages;setup(name='src2pdf',version='0.2.7',entry_points={'console_scripts':['src2pdf=src2pdf.__init__:main']},license='Apache 2',platforms='any',author='Silas S. Brown',author_email='ssb$$(echo 22@ca)m.ac.uk',description='Convert source code files to PDF using ReportLab, works in larger print',long_description=\"\"\"$$(python3 src2pdf.py --help|sed 's/$$/\\n/')\"\"\",long_description_content_type='text/markdown',packages=find_packages(),classifiers=['Programming Language :: Python :: 3','License :: OSI Approved :: Apache Software License','Operating System :: OS Independent'],python_requires='>=3.0')" > setup.py
 	(echo '[build-system]';echo 'requires = ["setuptools >= 64"]';echo 'build-backend = "setuptools.build_meta"') > pyproject.toml
 	mv README.md ..
 	python3 setup.py sdist

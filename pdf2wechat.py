@@ -5,8 +5,13 @@ Combines multi-page PDF into single horizontal JPEG
 and optimises for a maximum size e.g. WeChat 300KiB
 Requirements: poppler-utils (pdftoppm), Pillow
 
-Silas S. Brown 2026, public domain, no warranty
+(c) Silas S. Brown 2026.  License: Apache 2
 """
+# (I did say "public domain no warranty" but apparently
+# some corporate offices don't trust that.  Apache 2 lets
+# them know I don't have a silly patent up my sleeve that
+# I'd try to enforce, so their policy might accept it more
+# easily if you need to use this at work.)
 
 import subprocess,os,tempfile,argparse
 from pathlib import Path

@@ -2,7 +2,12 @@
 """
 src2epub.py - Convert source files to EPUB suitable for large-font configurations on Zenithal Bistable Display (eInk) devices
 (Tested on a secondhand 2011 Nook Simple Touch)
-v0.4 - Silas S. Brown 2026 - public domain - no warranty
+v0.4 (c) Silas S. Brown 2026.  License: Apache 2
+  (I did say "public domain no warranty" but apparently
+  some corporate offices don't trust that.  Apache 2 lets
+  them know I don't have a silly patent up my sleeve that
+  I'd try to enforce, so their policy might accept it more
+  easily if you need to use this at work.)
 
 Usage: python src2epub.py code-files [output.epub]
 """
